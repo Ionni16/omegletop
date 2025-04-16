@@ -105,7 +105,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Mirror Chat
+            OmegleTop
           </Typography>
           <Typography variant="body1">
             {isConnected ? 'Connesso' : 'Disconnesso'}
@@ -116,23 +116,19 @@ function App() {
       <Container maxWidth="md" sx={{ mt: 4 }}>
         {/* Titolo / descrizione */}
         <Typography variant="h4" gutterBottom>
-          Benvenuto nella Mirror Chat
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Qui puoi testare la tua videocamera in modalità specchio. 
-          Poi potrai estendere la logica con WebRTC e la chat random.
+          Benvenuto su OmegleTop
         </Typography>
 
         {/* Pulsante per accendere la camera */}
         {!isCameraOn && (
           <Button variant="contained" color="primary" onClick={handleStartCamera} sx={{ mr: 2 }}>
-            Accendi la camera
+            Accendi la Fotocamera
           </Button>
         )}
 
         {/* Esempio di pulsante per inviare un messaggio di test al server */}
         <Button variant="outlined" color="secondary" onClick={handleTestMessage}>
-          Invia testMessage
+          Invia un Messaggio
         </Button>
 
         {/* Switch per l’effetto mirror */}
@@ -155,14 +151,14 @@ function App() {
         <Box sx={{ display: 'flex', gap: 2, mt: 4, justifyContent: 'center' }}>
           {/* Video locale */}
           <Box>
-            <Typography variant="subtitle1" align="center">La tua camera</Typography>
+          
             <video
               ref={localVideoRef}
               autoPlay
               muted
               playsInline
               style={{
-                width: '320px',
+                width: '800px',
                 height: 'auto',
                 border: '1px solid #ccc',
                 borderRadius: '4px',
@@ -172,22 +168,7 @@ function App() {
             />
           </Box>
 
-          {/* Video remoto (placeholder) */}
-          <Box>
-            <Typography variant="subtitle1" align="center">Camera remota</Typography>
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              style={{
-                width: '320px',
-                height: 'auto',
-                border: '1px solid #ccc',
-                borderRadius: '4px'
-                // in genere NON serve specchiare il remoto
-              }}
-            />
-          </Box>
+
         </Box>
       </Container>
     </ThemeProvider>
