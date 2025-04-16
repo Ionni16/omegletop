@@ -70,22 +70,32 @@ function App() {
     };
   }, []);
 
+  // Quando isCameraOn diventa true, collega lo stream al video
+useEffect(() => {
+  if (isCameraOn && localStreamRef.current && localVideoRef.current) {
+    const videoEl = localVideoRef.current;
+    videoEl.srcObject = localStreamRef.current;
+    videoEl.play().catch(err => console.warn('Impossibile avviare play():', err));
+  }
+}, [isCameraOn]);
+
+
   // ---------- Avvio fotocamera e acquisizione video ----------
   // (La attiviamo solo dopo che l’utente clicca “Accendi camera” per esempio)
   const handleStartCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       localStreamRef.current = stream;
-
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
-      setIsCameraOn(true);
+      console.log('Stream ottenuto:', stream);
+      console.log('Video tracks:', stream.getVideoTracks());
+      setIsCameraOn(true);  // monta il video e fa partire l'useEffect
     } catch (err) {
       console.error('Errore getUserMedia:', err);
       alert('Impossibile accedere alla videocamera/microfono.');
     }
   };
+  
+  
 
   // ---------- Esempio di funzione base per inviare/ricevere un messaggio (opzionale) ----------
   const handleTestMessage = () => {
@@ -125,12 +135,6 @@ function App() {
             Accendi la Fotocamera
           </Button>
         )}
-
-        {/* Esempio di pulsante per inviare un messaggio di test al server */}
-        <Button variant="outlined" color="secondary" onClick={handleTestMessage}>
-          Invia un Messaggio
-        </Button>
-
         {/* Switch per l’effetto mirror */}
         {isCameraOn && (
           <Box sx={{ mt: 2 }}>
@@ -150,26 +154,67 @@ function App() {
         {/* Sezione video: locale e remoto (il remoto è facoltativo finché non implementi WebRTC) */}
         <Box sx={{ display: 'flex', gap: 2, mt: 4, justifyContent: 'center' }}>
           {/* Video locale */}
-          <Box>
-          
-            <video
-              ref={localVideoRef}
-              autoPlay
-              muted
-              playsInline
-              style={{
-                width: '800px',
-                height: 'auto',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                // Modalità specchio (flip or no flip)
-                transform: isMirrored ? 'scaleX(-1)' : 'none'
-              }}
-            />
-          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  {isCameraOn ? (
+    <video
+      ref={localVideoRef}
+      autoPlay
+      muted
+      playsInline
+      style={{
+        width: '800px',
+        height: '450px',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        objectFit: 'cover',
+        transform: isMirrored ? 'scaleX(-1)' : 'none'
+      }}
+    />
+  ) : (
+    <Box
+      sx={{
+        width: '800px',
+        height: '450px',
+        background: 'repeating-linear-gradient(45deg, #999, #999 10px, #ccc 10px, #ccc 20px)',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#333',
+        fontFamily: 'Montserrat, sans-serif',
+        fontSize: '1.2rem',
+        fontStyle: 'italic'
+      }}
+    >
+      Telecamera spenta
+    </Box>
+  )}
+
+  {isCameraOn && (
+    <Button 
+      variant="contained" 
+      color="secondary" 
+      sx={{ 
+        mt: 5,
+        px: 4,
+        py: 1.5,
+        fontSize: '1.3rem',
+        fontWeight: 'bold',
+        fontFamily: 'Montserrat, sans-serif'
+      }}
+      onClick={() => {
+        alert('Hai cliccato su INIZIA!');
+      }}
+    >
+      Inizia
+    </Button>
+  )}
+</Box>
 
 
-        </Box>
+
+       </Box>
       </Container>
     </ThemeProvider>
   );
