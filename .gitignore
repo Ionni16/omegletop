@@ -1,0 +1,5 @@
+# ignora tutti i .env
+*.env
+
+# oppure più selettivamente
+/server/.env
